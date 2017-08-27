@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LoL Smite Duel</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="SignInTitle">2000</string>
+    <string name="submitButtonText">Smite</string>
+    <string name="infoText">Smite dmg: 1000</string>
+</resources>
