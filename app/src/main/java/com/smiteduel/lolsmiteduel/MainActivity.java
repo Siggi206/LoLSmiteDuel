@@ -69,8 +69,10 @@ public class MainActivity extends AppCompatActivity {
         };
         damageThread.start();
 
-        final Button smiteButton = (Button) findViewById(R.id.smiteButton);
-        smiteButton.setOnClickListener(new View.OnClickListener()
+        final Button smiteButton1 = (Button) findViewById(R.id.smiteButton1);
+        final Button smiteButton2 = (Button) findViewById(R.id.smiteButton2);
+
+        smiteButton1.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -81,9 +83,28 @@ public class MainActivity extends AppCompatActivity {
                     timeUntilSmite = System.currentTimeMillis() - timeUntilSmite;
                     infoText.setText("You Smited at " + hpWhenSmite + "\nReaction time: "+ timeUntilSmite + "ms");
                     damageThread.interrupt();
+                    smiteButton2.setEnabled(false);
                 }
                 hp.setText(String.valueOf(hpWhenSmite - smiteDamage));
-                smiteButton.setEnabled(false);
+                smiteButton1.setEnabled(false);
+            }
+        });
+
+        smiteButton2.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                int hpWhenSmite = Integer.parseInt(hp.getText().toString());
+                if (hpWhenSmite <= smiteDamage)
+                {
+                    timeUntilSmite = System.currentTimeMillis() - timeUntilSmite;
+                    infoText.setText("You Smited at " + hpWhenSmite + "\nReaction time: "+ timeUntilSmite + "ms");
+                    damageThread.interrupt();
+                    smiteButton1.setEnabled(false);
+                }
+                hp.setText(String.valueOf(hpWhenSmite - smiteDamage));
+                smiteButton2.setEnabled(false);
             }
         });
 
@@ -96,7 +117,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 hp.setText("2000");
                 infoText = (TextView) findViewById(R.id.infoText);
-                smiteButton.setEnabled(true);
+                smiteButton1.setEnabled(true);
+                smiteButton2.setEnabled(true);
                 damageThread.run();
             }
         });
