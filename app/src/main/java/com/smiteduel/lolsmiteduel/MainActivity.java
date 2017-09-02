@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     long timeUntilSmite;
     boolean alreadyBelowHp;
     Thread damageThread;
+    boolean threadPause;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         smiteDamage = getResources().getInteger(R.integer.smiteDamage);
         timeUntilSmite = 0;
         alreadyBelowHp = false;
+        threadPause = false;
 
         final Button smiteButton1 = (Button) findViewById(R.id.smiteButton1);
         final Button smiteButton2 = (Button) findViewById(R.id.smiteButton2);
@@ -48,37 +50,34 @@ public class MainActivity extends AppCompatActivity {
             public void run()
             {
                 try {
-                    while (!isInterrupted())
-                    {
+                    while (!isInterrupted()) {
                         Thread.sleep(99);
-                        runOnUiThread(new Runnable()
+                        if(!threadPause)
                         {
-                            @Override
-                            public void run()
-                            {
-                                int hpWhenSmite = Integer.parseInt(hp.getText().toString());
-                                int remainingHp = (int) (hpWhenSmite -  Math.random()*100);
-                                hp.setText(String.valueOf(remainingHp));
-                                if(remainingHp <= 0)
-                                {
-                                    infoText.setText("You didn't smite in time'");
-                                    smiteButton1.setEnabled(false);
-                                    smiteButton2.setEnabled(false);
-                                    interruptThread();
-                                    hp.setText("0");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int hpWhenSmite = Integer.parseInt(hp.getText().toString());
+                                    int remainingHp = (int) (hpWhenSmite - Math.random() * 100);
+                                    hp.setText(String.valueOf(remainingHp));
+                                    if (remainingHp <= 0) {
+                                        infoText.setText("You didn't smite in time'");
+                                        smiteButton1.setEnabled(false);
+                                        smiteButton2.setEnabled(false);
+                                        toggleDamageThread();
+                                        hp.setText("0");
+                                    }
+                                    if (!alreadyBelowHp) {
+                                        timeUntilSmite = System.currentTimeMillis();
+                                    }
+                                    if (remainingHp <= smiteDamage) {
+                                        alreadyBelowHp = true;
+                                    }
+                                    Log.d("HP", hp.getText().toString() + " HP");
+                                    Log.d("HP", String.valueOf(System.currentTimeMillis() - timeUntilSmite) + " TIME");
                                 }
-                                if(!alreadyBelowHp)
-                                {
-                                    timeUntilSmite = System.currentTimeMillis();
-                                }
-                                if(remainingHp <= smiteDamage)
-                                {
-                                    alreadyBelowHp = true;
-                                }
-                                Log.d("HP",hp.getText().toString() + " HP");
-                                Log.d("HP",String.valueOf(System.currentTimeMillis() - timeUntilSmite) + " TIME");
-                            }
-                        });
+                            });
+                        }
                     }
                 }
                 catch (InterruptedException e) {
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     timeUntilSmite = System.currentTimeMillis() - timeUntilSmite;
                     infoText.setText("P1 Smited at " + hpWhenSmite + "\nReaction time: "+ timeUntilSmite + "ms");
-                    damageThread.interrupt();
+                    threadPause = true;
                     smiteButton2.setEnabled(false);
                 }
                 hp.setText(String.valueOf(hpWhenSmite - smiteDamage));
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     timeUntilSmite = System.currentTimeMillis() - timeUntilSmite;
                     infoText.setText("P2 Smited at " + hpWhenSmite + "\nReaction time: "+ timeUntilSmite + "ms");
-                    damageThread.interrupt();
+                    threadPause = true;
                     smiteButton1.setEnabled(false);
                 }
                 hp.setText(String.valueOf(hpWhenSmite - smiteDamage));
@@ -136,13 +135,14 @@ public class MainActivity extends AppCompatActivity {
                 infoText = (TextView) findViewById(R.id.infoText);
                 smiteButton1.setEnabled(true);
                 smiteButton2.setEnabled(true);
-                damageThread.run();
+                alreadyBelowHp = false;
+                toggleDamageThread();
             }
         });
     }
 
-    void interruptThread()
+    void toggleDamageThread()
     {
-        damageThread.interrupt();
+        threadPause = !threadPause;
     }
 }
