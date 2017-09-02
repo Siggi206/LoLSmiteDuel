@@ -28,7 +28,7 @@
         android:id="@+id/hp"
         android:layout_width="102dp"
         android:layout_height="27dp"
-        android:text="@string/SignInTitle"
+        android:text="@string/MonsterHp"
         android:textColor="#000000"
         android:textSize="18sp"
         tools:layout_constraintTop_creator="1"

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LoL Smite Duel</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="SignInTitle">2000</string>
+    <string name="MonsterHp">3000</string>
     <string name="smiteButton1Text">Smite1</string>
     <string name="smiteButton2Text">Smite2</string>
     <string name="infoText">Smite dmg: 1000</string>
