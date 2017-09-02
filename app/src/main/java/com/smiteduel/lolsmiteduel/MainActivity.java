@@ -59,12 +59,6 @@ public class MainActivity extends AppCompatActivity {
                                 int hpWhenSmite = Integer.parseInt(hp.getText().toString());
                                 int remainingHp = (int) (hpWhenSmite -  Math.random()*100);
                                 hp.setText(String.valueOf(remainingHp));
-                                if(hpWhenSmite <= smiteDamage && !alreadyBelowHp)
-                                {
-                                    alreadyBelowHp = true;
-                                    timeUntilSmite = System.currentTimeMillis();
-
-                                }
                                 if(remainingHp <= 0)
                                 {
                                     infoText.setText("You didn't smite in time'");
@@ -73,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
                                     interruptThread();
                                     hp.setText("0");
                                 }
+                                if(!alreadyBelowHp)
+                                {
+                                    timeUntilSmite = System.currentTimeMillis();
+                                }
+                                if(remainingHp <= smiteDamage)
+                                {
+                                    alreadyBelowHp = true;
+                                }
+                                Log.d("HP",hp.getText().toString() + " HP");
+                                Log.d("HP",String.valueOf(System.currentTimeMillis() - timeUntilSmite) + " TIME");
                             }
                         });
                     }
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view)
             {
                 int hpWhenSmite = Integer.parseInt(hp.getText().toString());
+                Log.d("HP",String.valueOf(hpWhenSmite) + " SMITE");
                 if (hpWhenSmite <= smiteDamage)
                 {
                     timeUntilSmite = System.currentTimeMillis() - timeUntilSmite;
