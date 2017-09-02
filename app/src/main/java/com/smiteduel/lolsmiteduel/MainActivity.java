@@ -9,10 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView hp;
     TextView infoText;
+    TextView scoreP1;
+    TextView scoreP2;
     int smiteDamage;
     long timeUntilSmite;
     boolean alreadyBelowHp;
@@ -37,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         hp = (TextView) findViewById(R.id.hp);
         infoText = (TextView) findViewById(R.id.infoText);
+        scoreP1 = (TextView) findViewById(R.id.scoreP1);
+        scoreP2 = (TextView) findViewById(R.id.scoreP2);
         smiteDamage = getResources().getInteger(R.integer.smiteDamage);
         timeUntilSmite = 0;
         alreadyBelowHp = false;
@@ -100,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     infoText.setText("P1 Smited at " + hpWhenSmite + "\nReaction time: "+ timeUntilSmite + "ms");
                     threadPause = true;
                     smiteButton2.setEnabled(false);
+                    scoreP1.setText(String.valueOf(Integer.parseInt(scoreP1.getText().toString()) + 1));
                 }
                 hp.setText(String.valueOf(hpWhenSmite - smiteDamage));
                 smiteButton1.setEnabled(false);
@@ -118,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     infoText.setText("P2 Smited at " + hpWhenSmite + "\nReaction time: "+ timeUntilSmite + "ms");
                     threadPause = true;
                     smiteButton1.setEnabled(false);
+                    scoreP2.setText(String.valueOf(Integer.parseInt(scoreP2.getText().toString()) + 1));
                 }
                 hp.setText(String.valueOf(hpWhenSmite - smiteDamage));
                 smiteButton2.setEnabled(false);
@@ -131,12 +139,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                hp.setText("2000");
+                hp.setText(getString(R.string.MonsterHp));
                 infoText = (TextView) findViewById(R.id.infoText);
                 smiteButton1.setEnabled(true);
                 smiteButton2.setEnabled(true);
                 alreadyBelowHp = false;
-                toggleDamageThread();
+                threadPause = false;
             }
         });
     }
